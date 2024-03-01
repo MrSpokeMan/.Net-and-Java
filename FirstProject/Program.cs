@@ -10,8 +10,11 @@ namespace FirstProject
     {
         static void Main(string[] args)
         {
-            FizzBuzz run = new FizzBuzz();
-            run.Function();
+            Console.WriteLine("Enter a number as a upper bound: ");
+            int num = Convert.ToInt32(Console.ReadLine());
+            //FizzBuzz run = new FizzBuzz(num);
+            //run.Function();
+            FizzBuzz.Function(num);
         }
     }
 }
