@@ -8,7 +8,8 @@ namespace FirstProject
 {
     public class FizzBuzz
     {
-        public static void Function()
+        public FizzBuzz() { }
+        public void Function()
         {
             Console.WriteLine("Enter a number as a upper bound: ");
             int num = Convert.ToInt32(Console.ReadLine());
