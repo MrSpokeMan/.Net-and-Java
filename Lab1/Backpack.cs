@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+[assembly: InternalsVisibleTo("UnitTestProject1"), InternalsVisibleTo("WinFormsApp1")]
 
-namespace Lab2
+namespace Lab1
 {
     internal class Backpack
     {
@@ -18,21 +20,35 @@ namespace Lab2
 
         private int itemsCount;
         private List<Item> items;
+        private int counter = 0;
 
-        public Backpack(int itemsCount, int seed)
+        public Backpack(int itemsCount, int seed, bool given=false)
         {
             this.itemsCount = itemsCount;
             this.items = new List<Item>();
             Random rand = new Random(seed);
-            for (int i = 0; i < this.itemsCount; i++)
+            if (!given)
             {
-                Item item = new Item();
-                item.weight = rand.Next(1, 10);
-                item.value = rand.Next(1, 10);
-                item.fit = false;
-                item.number = i + 1;
-                items.Add(item);
+                for (int i = 0; i < this.itemsCount; i++)
+                {
+                    Item item = new Item();
+                    item.weight = rand.Next(1, 10);
+                    item.value = rand.Next(1, 10);
+                    item.fit = false;
+                    item.number = i + 1;
+                    items.Add(item);
+                }
             }
+        }
+
+        public void AddItem(int weight, int value)
+        {
+            Item item = new Item();
+            item.weight = weight;
+            item.value = value;
+            this.counter++;
+            item.number = this.counter;
+            items.Add(item);
         }
 
         public override string ToString()
@@ -47,7 +63,7 @@ namespace Lab2
             return sb.ToString();
         }
 
-        public string Solve(int capacity)
+        public Result Solve(int capacity)
         {
             items = items.OrderByDescending(item => (double)item.value / item.weight).ToList();
 
@@ -62,7 +78,7 @@ namespace Lab2
                     selectedItems.Add(item.number);
                     totalValue += item.value;
                     totalWeight += item.weight;
-                    // item.fit = true; DOPYTAĆ JAK TO OBEJŚĆ
+                    // item.fit = true; //DOPYTAĆ JAK TO OBEJŚĆ
                 }
                 else
                 {
@@ -71,7 +87,7 @@ namespace Lab2
             }
 
             Result result = new Result(selectedItems, totalValue, totalWeight);
-            return result.ToString();
+            return result;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab2
+namespace Lab1
 {
     internal class Program
     {
@@ -21,10 +21,9 @@ namespace Lab2
             Console.WriteLine("Enter the capacity of the backpack: ");
             int capacity = int.Parse(Console.ReadLine());
 
-            Console.WriteLine(backpack.ToString());
+            Console.WriteLine(backpack);
 
             Console.WriteLine(backpack.Solve(capacity));
-            
         }
     }
 }
