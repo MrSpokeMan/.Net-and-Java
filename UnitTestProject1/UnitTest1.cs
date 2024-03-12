@@ -1,4 +1,5 @@
 using Lab1;
+using System.Text;
 namespace UnitTestsProject1
 {
     [TestClass]
@@ -67,12 +68,55 @@ namespace UnitTestsProject1
         }
 
         [TestMethod]
-        public void CheckStringInstance()
+        public void CheckToStringMethod()
         {
             Backpack specifiedItem = new Backpack(1, 12343, true);
             specifiedItem.AddItem(5, 10);
 
-            Assert.AreEqual("Number of items: 1\nItems: \nItem 1: weight = 5, value = 10\n", specifiedItem.ToString());
+            string result = specifiedItem.ToString();
+            byte[] byteArray = Encoding.UTF8.GetBytes(result);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Number of items: " + 1);
+            sb.AppendLine("Items: ");
+            sb.AppendLine("Item " + 1 + ": weight = " + 5 + ", value = " + 10);
+            string expected = sb.ToString();
+
+            byte[] byteArrayExpected = Encoding.UTF8.GetBytes(expected);
+
+            Assert.IsTrue(byteArrayExpected.SequenceEqual(byteArray));
+        }
+
+        [TestMethod]
+        public void CheckResultToStringMethod()
+        {
+            Backpack specifiedItem = new Backpack(1, 12343, true);
+            specifiedItem.AddItem(5, 10);
+
+            Result result = specifiedItem.Solve(10);
+
+            string resultString = result.ToString();
+            byte[] byteArray = Encoding.UTF8.GetBytes(resultString);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Items: ");
+            sb.AppendLine("Item " + 1);
+            sb.AppendLine("Total value: " + 10);
+            sb.AppendLine("Total weight: " + 5);
+            string expected = sb.ToString();
+
+            byte[] byteArrayExpected = Encoding.UTF8.GetBytes(expected);
+
+            Assert.IsTrue(byteArrayExpected.SequenceEqual(byteArray));
+        }
+
+        [TestMethod]
+        public void TestResultConstructor()
+        {
+            Result result = new Result(new List<int> { 1, 2, 3 }, 10, 5);
+            Assert.AreEqual(10, result.value);
+            Assert.AreEqual(5, result.weight);
+            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, result.items);
         }
     }
 }

@@ -105,6 +105,7 @@
             ResultsTextBox.Location = new Point(494, 60);
             ResultsTextBox.Multiline = true;
             ResultsTextBox.Name = "ResultsTextBox";
+            ResultsTextBox.ScrollBars = ScrollBars.Vertical;
             ResultsTextBox.Size = new Size(271, 378);
             ResultsTextBox.TabIndex = 7;
             // 
@@ -123,6 +124,7 @@
             InstanceTextBox.Location = new Point(172, 60);
             InstanceTextBox.Multiline = true;
             InstanceTextBox.Name = "InstanceTextBox";
+            InstanceTextBox.ScrollBars = ScrollBars.Vertical;
             InstanceTextBox.Size = new Size(271, 378);
             InstanceTextBox.TabIndex = 9;
             InstanceTextBox.TextChanged += InstanceTextBox_TextChanged;
@@ -153,7 +155,7 @@
             Controls.Add(random);
             Controls.Add(NumberOfItems);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Backpack";
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
