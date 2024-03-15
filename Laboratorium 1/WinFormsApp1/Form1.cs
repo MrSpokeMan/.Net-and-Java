@@ -6,6 +6,10 @@ namespace WinFormsApp1
         public Form1()
         {
             InitializeComponent();
+
+            NumberOfItems.KeyPress += NumberOfItems_KeyPress;
+            volume.KeyPress += volume_KeyPress;
+            random.KeyPress += random_KeyPress;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -31,13 +35,31 @@ namespace WinFormsApp1
 
         private void InstanceTextBox_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             InstanceTextBox.ReadOnly = true;
             ResultsTextBox.ReadOnly = true;
+        }
+
+        private void NumberOfItems_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void NumberOfItems_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) { e.Handled = true; }
+        }
+
+        private void volume_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) { e.Handled = true; }
+        }
+
+        private void random_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) { e.Handled = true; }
         }
     }
 }

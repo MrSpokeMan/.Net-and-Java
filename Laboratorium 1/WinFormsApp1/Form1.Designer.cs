@@ -47,6 +47,7 @@
             NumberOfItems.Name = "NumberOfItems";
             NumberOfItems.Size = new Size(100, 23);
             NumberOfItems.TabIndex = 0;
+            NumberOfItems.TextChanged += NumberOfItems_TextChanged;
             // 
             // random
             // 
@@ -105,6 +106,7 @@
             ResultsTextBox.Location = new Point(494, 60);
             ResultsTextBox.Multiline = true;
             ResultsTextBox.Name = "ResultsTextBox";
+            ResultsTextBox.ReadOnly = true;
             ResultsTextBox.ScrollBars = ScrollBars.Vertical;
             ResultsTextBox.Size = new Size(271, 378);
             ResultsTextBox.TabIndex = 7;
@@ -124,6 +126,7 @@
             InstanceTextBox.Location = new Point(172, 60);
             InstanceTextBox.Multiline = true;
             InstanceTextBox.Name = "InstanceTextBox";
+            InstanceTextBox.ReadOnly = true;
             InstanceTextBox.ScrollBars = ScrollBars.Vertical;
             InstanceTextBox.Size = new Size(271, 378);
             InstanceTextBox.TabIndex = 9;
