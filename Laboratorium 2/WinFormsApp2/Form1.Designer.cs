@@ -34,6 +34,10 @@
             comboBox1 = new ComboBox();
             comboBox2 = new ComboBox();
             textBox2 = new TextBox();
+            label1 = new Label();
+            label2 = new Label();
+            label3 = new Label();
+            calculateButton = new Button();
             SuspendLayout();
             // 
             // TextBoxDisplayData
@@ -91,11 +95,52 @@
             textBox2.Size = new Size(232, 40);
             textBox2.TabIndex = 5;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(269, 9);
+            label1.Name = "label1";
+            label1.Size = new Size(153, 15);
+            label1.TabIndex = 6;
+            label1.Text = "WALUTA DO PRZELICZENIA";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(290, 78);
+            label2.Name = "label2";
+            label2.Size = new Size(132, 15);
+            label2.TabIndex = 7;
+            label2.Text = "WALUTA PRZELICZANA";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(190, 309);
+            label3.Name = "label3";
+            label3.Size = new Size(44, 15);
+            label3.TabIndex = 8;
+            label3.Text = "WYNIK";
+            // 
+            // calculateButton
+            // 
+            calculateButton.Location = new Point(446, 279);
+            calculateButton.Name = "calculateButton";
+            calculateButton.Size = new Size(125, 75);
+            calculateButton.TabIndex = 9;
+            calculateButton.Text = "Calculate";
+            calculateButton.UseVisualStyleBackColor = true;
+            calculateButton.Click += calculateButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(calculateButton);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(textBox2);
             Controls.Add(comboBox2);
             Controls.Add(comboBox1);
@@ -116,5 +161,9 @@
         private ComboBox comboBox1;
         private ComboBox comboBox2;
         private TextBox textBox2;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Button calculateButton;
     }
 }

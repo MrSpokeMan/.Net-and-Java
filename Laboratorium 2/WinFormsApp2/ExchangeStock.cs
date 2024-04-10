@@ -20,15 +20,23 @@ namespace WinFormsApp2
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var currency1 = new CurrencyDB() { Id = 1, Timestamp = 1631539200 };
-            currency1.Rates.Add("USD", 1.0m);
-            var currency2 = new CurrencyDB() { Id = 2, Timestamp = 1631539200 };
-            currency2.Rates.Add("EUR", 0.85m);
-            var currency3 = new CurrencyDB() { Id = 3, Timestamp = 1631539200 };
-            currency3.Rates.Add("JPY", 110.0m);
+            var currency1 = new CurrencyDB() { Id = 1, Currency = "PKB", Value = 2.1m };
+            var currency2 = new CurrencyDB() { Id = 2, Currency = "UGG", Value = 100000.0m };
             modelBuilder.Entity<CurrencyDB>().HasData(
-                    currency1, currency2, currency3
+                    currency1, currency2
             );
-        }   
+        }
+
+        public bool IsEmpty()
+        {
+            if (CurrencyDB.Count() == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

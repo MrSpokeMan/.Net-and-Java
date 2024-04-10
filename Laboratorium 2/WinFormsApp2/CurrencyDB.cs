@@ -10,22 +10,12 @@ namespace WinFormsApp2
     internal class CurrencyDB
     {
         public int Id { get; set; }
-        public string? Disclaimer { get; set; }
-        public string? License { get; set; }
-        public required long Timestamp { get; set; }
-        public string? Base { get; set; }
-
-        [NotMapped]
-        public Dictionary<string, decimal> Rates { get; set; }
-
-        public CurrencyDB()
-        {
-            Rates = new Dictionary<string, decimal>();
-        }
+        public required string Currency { get; set; }
+        public required decimal Value { get; set; }
 
         public override string ToString()
         {
-            return $"{Id} {Rates.Keys}: {Rates.Values}";
+            return $"{Currency}: {Value}";
         }
     }
 }

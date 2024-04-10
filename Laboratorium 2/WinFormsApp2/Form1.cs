@@ -1,5 +1,7 @@
-using ConsoleApp2;
+﻿using ConsoleApp2;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic.ApplicationServices;
+using System.Data.Common;
 using System.Security.Policy;
 using System.Text.Json;
 
@@ -20,21 +22,40 @@ namespace WinFormsApp2
             exchangeStock = new ExchangeStock();
             client = new HttpClient();
             url_req = $"https://openexchangerates.org/api/latest.json?app_id={token}";
-            TextBoxDisplayData.KeyPress += TextBoxDisplayData_KeyPress;
+            textBox1.KeyPress += textBox1_KeyPress;
+            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
 
-            if (exchangeStock != null)
+            if (exchangeStock.IsEmpty())
             {
-                // Prepare data for combobox to chooose currency
-                var currencies = exchangeStock.CurrencyDB.ToList().OrderBy(s => s.Id).Reverse().First();
-                foreach (var rate in currencies.Rates)
-                {
-                    TextBoxDisplayData.Text = rate.Key;
-                }
+                DownloadButton_Click(null, null);
+            }
+
+            AddToComboboxes();
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var result = exchangeStock.CurrencyDB.Where(x => x.Currency == comboBox2.SelectedItem.ToString()).FirstOrDefault().Value;
+            result = Math.Round(result, 2);
+            textBox2.Text = $"{result} USD";
+        }
+
+        private async void AddToComboboxes()
+        {
+            var currencies = await exchangeStock.CurrencyDB.ToListAsync();
+            foreach (var currency in currencies)
+            {
+                comboBox1.Items.Add(currency.Currency);
+                comboBox2.Items.Add(currency.Currency);
             }
         }
 
         private async void DownloadButton_Click(object sender, EventArgs e)
         {
+            var curr = await exchangeStock.CurrencyDB.ToListAsync();
+            exchangeStock.CurrencyDB.RemoveRange(curr);
+            await exchangeStock.SaveChangesAsync();
+
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -51,16 +72,16 @@ namespace WinFormsApp2
 
             Currency? exchangeRates = JsonSerializer.Deserialize<Currency>(responseString, options);
 
-            var currencies = new CurrencyDB() { Disclaimer = exchangeRates.Disclaimer, License = exchangeRates.License, Base = exchangeRates.Base, Timestamp = exchangeRates.Timestamp };
             foreach (var rate in exchangeRates.Rates)
             {
-                currencies.Rates.Add(rate.Key, rate.Value);
+                var currencies = new CurrencyDB() { Currency = rate.Key, Value = rate.Value };
+                await exchangeStock.CurrencyDB.AddAsync(currencies);
             }
-            exchangeStock.CurrencyDB.Add(currencies);
-            exchangeStock.SaveChanges();
+            await exchangeStock.SaveChangesAsync();
+            AddToComboboxes();
         }
 
-        private void TextBoxDisplayData_KeyPress(object sender, KeyPressEventArgs e)
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) { e.Handled = true; }
         }
@@ -68,6 +89,27 @@ namespace WinFormsApp2
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private async void calculateButton_Click(object sender, EventArgs e)
+        {
+            if (textBox1 != null && comboBox1.SelectedItem != null && comboBox2.SelectedItem != null)
+            {
+                var value = decimal.Parse(textBox1.Text);
+                var currency1 = comboBox1.SelectedItem.ToString();
+                var currency2 = comboBox2.SelectedItem.ToString();
+
+                var currency1Value = exchangeStock.CurrencyDB.Where(x => x.Currency == currency1).FirstOrDefault().Value;
+                var currency2Value = exchangeStock.CurrencyDB.Where(x => x.Currency == currency2).FirstOrDefault().Value;
+
+                var result = value * currency1Value / currency2Value;
+                result = Math.Round(result, 2);
+                TextBoxDisplayData.Text = $"{result} {currency2}";
+            }
+            else
+            {
+                MessageBox.Show("Please fill all fields", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
