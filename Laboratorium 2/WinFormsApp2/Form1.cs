@@ -79,6 +79,7 @@ namespace WinFormsApp2
             }
             await exchangeStock.SaveChangesAsync();
             AddToComboboxes();
+            TextBoxDisplayData.Text = "Data downloaded";
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
