@@ -41,6 +41,22 @@
             buttonMatrixGenerate = new Button();
             textBoxThreads = new TextBox();
             label3 = new Label();
+            saveFileDialog1 = new SaveFileDialog();
+            labelThread = new Label();
+            labelParallel = new Label();
+            pictureBox1 = new PictureBox();
+            buttonLoadImg = new Button();
+            buttonProcess = new Button();
+            openFileDialog1 = new OpenFileDialog();
+            pictureBox2 = new PictureBox();
+            pictureBox3 = new PictureBox();
+            pictureBox4 = new PictureBox();
+            pictureBox5 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             SuspendLayout();
             // 
             // textBoxMatrixRow1
@@ -160,11 +176,100 @@
             label3.TabIndex = 12;
             label3.Text = "Ilość wątków";
             // 
+            // labelThread
+            // 
+            labelThread.AutoSize = true;
+            labelThread.Location = new Point(527, 234);
+            labelThread.Name = "labelThread";
+            labelThread.Size = new Size(0, 15);
+            labelThread.TabIndex = 13;
+            // 
+            // labelParallel
+            // 
+            labelParallel.AutoSize = true;
+            labelParallel.Location = new Point(531, 278);
+            labelParallel.Name = "labelParallel";
+            labelParallel.Size = new Size(0, 15);
+            labelParallel.TabIndex = 14;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(211, 492);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(271, 257);
+            pictureBox1.TabIndex = 15;
+            pictureBox1.TabStop = false;
+            // 
+            // buttonLoadImg
+            // 
+            buttonLoadImg.Location = new Point(531, 603);
+            buttonLoadImg.Name = "buttonLoadImg";
+            buttonLoadImg.Size = new Size(75, 23);
+            buttonLoadImg.TabIndex = 16;
+            buttonLoadImg.Text = "Załaduj";
+            buttonLoadImg.UseVisualStyleBackColor = true;
+            buttonLoadImg.Click += buttonLoadImg_Click;
+            // 
+            // buttonProcess
+            // 
+            buttonProcess.Location = new Point(531, 647);
+            buttonProcess.Name = "buttonProcess";
+            buttonProcess.Size = new Size(75, 23);
+            buttonProcess.TabIndex = 17;
+            buttonProcess.Text = "Przetwórz";
+            buttonProcess.UseVisualStyleBackColor = true;
+            buttonProcess.Click += buttonProcess_Click;
+            // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Location = new Point(662, 295);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(271, 257);
+            pictureBox2.TabIndex = 18;
+            pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            pictureBox3.Location = new Point(991, 295);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(271, 257);
+            pictureBox3.TabIndex = 19;
+            pictureBox3.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            pictureBox4.Location = new Point(991, 567);
+            pictureBox4.Name = "pictureBox4";
+            pictureBox4.Size = new Size(271, 257);
+            pictureBox4.TabIndex = 20;
+            pictureBox4.TabStop = false;
+            // 
+            // pictureBox5
+            // 
+            pictureBox5.Location = new Point(662, 567);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(271, 257);
+            pictureBox5.TabIndex = 21;
+            pictureBox5.TabStop = false;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1375, 888);
+            Controls.Add(pictureBox5);
+            Controls.Add(pictureBox4);
+            Controls.Add(pictureBox3);
+            Controls.Add(pictureBox2);
+            Controls.Add(buttonProcess);
+            Controls.Add(buttonLoadImg);
+            Controls.Add(pictureBox1);
+            Controls.Add(labelParallel);
+            Controls.Add(labelThread);
             Controls.Add(label3);
             Controls.Add(textBoxThreads);
             Controls.Add(buttonMatrixGenerate);
@@ -180,6 +285,11 @@
             Controls.Add(textBoxMatrixRow1);
             Name = "Form1";
             Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -199,5 +309,16 @@
         private Button buttonMatrixGenerate;
         private TextBox textBoxThreads;
         private Label label3;
+        private SaveFileDialog saveFileDialog1;
+        private Label labelThread;
+        private Label labelParallel;
+        private PictureBox pictureBox1;
+        private Button buttonLoadImg;
+        private Button buttonProcess;
+        private OpenFileDialog openFileDialog1;
+        private PictureBox pictureBox2;
+        private PictureBox pictureBox3;
+        private PictureBox pictureBox4;
+        private PictureBox pictureBox5;
     }
 }

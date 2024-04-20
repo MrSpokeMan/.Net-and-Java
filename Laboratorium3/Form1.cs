@@ -1,13 +1,17 @@
-﻿namespace Laboratorium3
+﻿using System.Drawing;
+
+namespace Laboratorium3
 {
     public partial class Form1 : Form
     {
-        private int[,] matrix1;
-        private int[,] matrix2;
-        private volatile int[,] resultMatrix;
-        private Random random = new Random();
-        private int row1, row2, column1, column2, threads;
         Thread[] threadsArray;
+        MatrixMultiplier matrixMultiplier;
+        private Bitmap? image;
+
+        private readonly object imageLock = new object();
+
+        private int threads;
+        private int[,] matrix1, matrix2, resultMatrix;
 
         public Form1()
         {
@@ -26,16 +30,31 @@
 
         private void buttonCalculate_Click(object sender, EventArgs e)
         {
-            if (column1 != row2)
+            if (textBoxThreads.Text != "")
+            {
+                this.threads = int.Parse(textBoxThreads.Text);
+            }
+            else
+            {
+                this.threads = 1;
+            }
+
+            if (!matrixMultiplier.IsMultiplicationPossible())
             {
                 MessageBox.Show("Nie można pomnożyć tych macierzy");
                 return;
             }
 
+            int size = matrix1.GetLength(0);
+            int rowsPerThread = size / threads;
+
             this.threadsArray = new Thread[threads];
             for (int i = 0; i < threads; i++)
             {
-                threadsArray[i] = new Thread(() => CalculateMatrix(row1, column1, column2, matrix1, matrix2, resultMatrix));
+                int startRow = i * rowsPerThread;
+                int endRow = (i == threads - 1) ? size : (i + 1) * rowsPerThread;
+
+                threadsArray[i] = new Thread(() => matrixMultiplier.CalculateMatrix(startRow, endRow));
             }
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -49,10 +68,20 @@
             }
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
-            textBoxMatrixResult.Text = "Czas: " + elapsedMs + " ms";
+            labelThread.Text = "Czas niskopoziomowy: " + elapsedMs + " ms";
+
+            ParallelOptions options = new ParallelOptions();
+            options.MaxDegreeOfParallelism = threads;
+
+            var watchParallel = System.Diagnostics.Stopwatch.StartNew();
+            matrixMultiplier.CalculateMatrixParallel(options);
+            watchParallel.Stop();
+            var elapsedMsParallel = watchParallel.ElapsedMilliseconds;
+            labelParallel.Text = "Czas wysokopoziomowy: " + elapsedMsParallel + " ms";
 
             // Wypisanie wyniku
-            //this.DisplayMatrix(resultMatrix, row1, column2, textBoxMatrixResult);  
+            //this.resultMatrix = matrixMultiplier.GetResultMatrix();
+            //matrixMultiplier.DisplayMatrix(this.resultMatrix, textBoxMatrixResult); 
         }
 
         private void textBoxMatrixRow1_KeyPress(object sender, KeyPressEventArgs e)
@@ -97,68 +126,85 @@
 
         private void buttonMatrixGenerate_Click(object sender, EventArgs e)
         {
-            this.row1 = int.Parse(textBoxMatrixRow1.Text);
-            this.column1 = int.Parse(textBoxMatrixColumn1.Text);
-            this.row2 = int.Parse(textBoxMatrixRow2.Text);
-            this.column2 = int.Parse(textBoxMatrixColumn2.Text);
+            int row1 = int.Parse(textBoxMatrixRow1.Text);
+            int column1 = int.Parse(textBoxMatrixColumn1.Text);
+            int row2 = int.Parse(textBoxMatrixRow2.Text);
+            int column2 = int.Parse(textBoxMatrixColumn2.Text);
 
-            if (textBoxThreads.Text != "")
-            {
-                this.threads = int.Parse(textBoxThreads.Text);
-            } else
-            {
-                this.threads = 1;
-            }
+            matrixMultiplier = new MatrixMultiplier(row1, column1, row2, column2);
 
-            this.matrix1 = new int[row1, column1];
-            this.matrix2 = new int[row2, column2];
+            matrixMultiplier.GenerateMatrix(row1, column1, row2, column2);
 
-            this.resultMatrix = new int[row1, column2];
-
-            for (int i = 0; i < row1; i++)
-            {
-                for (int j = 0; j < column1; j++)
-                {
-                    matrix1[i, j] = random.Next(1, 100);
-                    matrix2[i, j] = random.Next(1, 100);
-                }
-            }
+            this.matrix1 = matrixMultiplier.GetMatrix1();
+            this.matrix2 = matrixMultiplier.GetMatrix2();
 
             // Wypisanie macierzy
-            this.DisplayMatrix(this.matrix1, row1, column1, textBoxMatrix1);
-            this.DisplayMatrix(this.matrix2, row2, column2, textBoxMatrix2);
+            //matrixMultiplier.DisplayMatrix(this.matrix1, textBoxMatrix1);
+            //matrixMultiplier.DisplayMatrix(this.matrix2, textBoxMatrix2);
         }
 
-        private void DisplayMatrix(int[,] matrix, int row, int column, TextBox textBox)
+        private void buttonLoadImg_Click(object sender, EventArgs e)
         {
-            textBox.Text = "[";
-
-            for (int i = 0; i < row; i++)
+            openFileDialog1.ShowDialog();
+            openFileDialog1.Filter = "Image Files(*.PNG;*.JPG;)|*.PNG;*.JPG;|All files (*.*)|*.*";
+            var file = openFileDialog1.FileName;
+            if (file != "")
             {
-                for (int j = 0; j < column; j++)
-                {
-                    textBox.Text += matrix[i, j] + " ";
-                }
-                if (i != row - 1)
-                {
-                    textBox.Text += "\r\n";
-                }
+                image = new Bitmap(file);
+                pictureBox1.Image = image;
             }
-
-            textBox.Text += "]";
         }
 
-        private static void CalculateMatrix(int row1, int column1, int column2, int[,] matrix1, int[,] matrix2, int[,] resultMatrix)
+        private void buttonProcess_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < row1; i++)
+            Thread[] processes = new Thread[4];
+            processes[0] = new Thread(() =>
             {
-                for (int j = 0; j < column2; j++)
+                Bitmap negativeImage;
+                lock (imageLock)
                 {
-                    for (int k = 0; k < column1; k++)
-                    {
-                        resultMatrix[i, j] += matrix1[i, k] * matrix2[k, j];
-                    }
+                    negativeImage = ImageProcessing.Negative(image);
                 }
+                pictureBox2.Image = negativeImage;
+            });
+
+            processes[1] = new Thread(() =>
+            {
+                Bitmap thresholdedImage;
+                lock (imageLock)
+                {
+                    thresholdedImage = ImageProcessing.ApplyThreshold(image, 128);
+                }
+                pictureBox3.Image = thresholdedImage;
+            });
+
+            processes[2] = new Thread(() =>
+            {
+                Bitmap mirroredImage;
+                lock (imageLock)
+                {
+                    mirroredImage = ImageProcessing.MirrorEffect(image);
+                }
+                pictureBox4.Image = mirroredImage;
+            });
+
+            processes[3] = new Thread(() =>
+            {
+                Bitmap edgesImage;
+                lock (imageLock)
+                {
+                    edgesImage = ImageProcessing.DetectEdges(image);
+                }
+                pictureBox5.Image = edgesImage;
+            });
+
+            foreach (var process in processes)
+            {
+                process.Start();
+            }
+            foreach (var process in processes)
+            {
+                process.Join();
             }
         }
     }
