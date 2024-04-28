@@ -1,4 +1,4 @@
-using Laboratorium_4.Components;
+using Laboratorium4.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
