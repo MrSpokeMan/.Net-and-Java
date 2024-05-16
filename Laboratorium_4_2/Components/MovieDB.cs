@@ -13,7 +13,7 @@ namespace Laboratorium_4_2.Components
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=movie.db");
+            optionsBuilder.UseSqlite(@"Data Source=movie.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
