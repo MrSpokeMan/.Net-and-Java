@@ -1,0 +1,35 @@
+﻿@page "/movies"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject Lab4_2.Data.ApplicationDbContext DB
+@using Lab4_2.Components
+@rendermode InteractiveServer
+<AuthorizeView>
+	<Authorized>
+		<PageTitle>Index</PageTitle>
+
+		<h1>Index</h1>
+
+		<p>
+			<a href="movies/create">Create New</a>
+		</p>
+
+		<QuickGrid Class="table" Items="@(DB.Movie)">
+			<PropertyColumn Property="@(movie => movie.Title)" Sortable="true" />
+			<PropertyColumn Property="@(movie => movie.RelaseDate)" Sortable="true" />
+			<PropertyColumn Property="@(movie => movie.Rate)" Sortable="true" />
+
+			<TemplateColumn Context="movie">
+				<a href="@($"movies/edit?id={movie.Id}")">Edit</a> |
+				<a href="@($"movies/details?id={movie.Id}")">Details</a> |
+				<a href="@($"movies/delete?id={movie.Id}")">Delete</a>
+			</TemplateColumn>
+		</QuickGrid>
+	</Authorized>
+	<NotAuthorized>
+		<p>You are not authorized to view this page.</p>
+
+		<h1>Mapa Google</h1>
+		<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31059.17395634519!2d-122.41941552503628!3d37.77492951526593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80859a6d00690021%3A0x4a501367f076adff!2sSan%20Francisco%2C%20CA%2C%20USA!5e0!3m2!1sen!2suk!4v1628674395887!5m2!1sen!2suk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+
+	</NotAuthorized>
+</AuthorizeView>

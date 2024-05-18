@@ -1,0 +1,65 @@
+﻿@page "/movies/details"
+@inject Lab4_2.Data.ApplicationDbContext DB
+@using Lab4_2.Components
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Movie</h4>
+    <hr />
+    @if (movie is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@movie.Description</dd>
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@movie.Title</dd>
+            <dt class="col-sm-2">RelaseDate</dt>
+            <dd class="col-sm-10">@movie.RelaseDate</dd>
+            <dt class="col-sm-2">Rate</dt>
+            <dd class="col-sm-10">@movie.Rate</dd>
+            <dt class="col-sm-2">ImageUrl</dt>
+            <dd class="col-sm-10"><img src="@movie.ImageUrl" alt="Image" style="width: 200px; height: 150px;" /></dd>
+        </dl>
+        <div>
+            <a href="@($"/movies/edit?id={movie.Id}")">Edit</a> |
+			<!-- Add rate to movie and calculate average rate with existing value -->
+           <input type="number" id="rate" @bind-value="rate" />
+           <button @onclick="AddRate">Add Rate</button>
+			<a href="@($"/movies")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Movie? movie;
+    int rate;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        movie = await DB.Movie.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (movie is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async void AddRate()
+	{
+		movie.Rate = (movie.Rate + rate) / 2;
+		await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/movies");
+	}
+}
